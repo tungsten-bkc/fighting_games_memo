@@ -36,8 +36,39 @@ class DatabaseHelper {
     });
   }
 
+  Future<Todo> getTodoById(int id) async {
+    // データベースから指定したIDのTodoを取得
+    List<Map<String, dynamic>> maps = await _database!.query(
+      'todos',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    // データベースからのクエリ結果をTodoオブジェクトに変換
+    if (maps.isNotEmpty) {
+      return Todo.fromMap(maps.first);
+      // Todoオブジェクトを返す
+    } else {
+      throw Exception('Todo not found'); // Todoが見つからない場合は例外をスロー
+    }
+  }
+
   Future<void> insertTodo(Todo todo) async {
     await _database?.insert('todos', todo.toMap());
+  }
+
+  Future<void> updateTodo(int id, String title, int isCompleted) async {
+    final db = _database;
+    final values = <String, dynamic>{
+      "title": title,
+      "isCompleted": isCompleted,
+    };
+    await db!.update(
+      "todos",
+      values,
+      where: "id=?",
+      whereArgs: [id],
+    );
   }
 
   bool _isDatabaseInitialized() {
