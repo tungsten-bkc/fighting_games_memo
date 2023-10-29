@@ -28,7 +28,7 @@ class TodoAddDialog extends StatelessWidget {
           onPressed: () {
             String todoTitle = _textFieldController.text;
             todoBloc.add(
-              AddTodo(
+              AddTodoEvent(
                 todo: Todo(title: todoTitle, isCompleted: 0),
               ),
             );
